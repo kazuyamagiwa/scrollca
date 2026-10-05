@@ -4,7 +4,7 @@ from datetime import timedelta
 
 import streamlit as st
 
-from rule90_scroll import initial_row, next_generation
+from rule90_scroll import format_row, initial_row, next_generation
 
 st.set_page_config(
     page_title="scrollca — Rule 90",
@@ -60,7 +60,7 @@ def _reset_state(new_width: int) -> None:
     row = initial_row(new_width)
     st.session_state.width = new_width
     st.session_state.current = row
-    st.session_state.history = ["".join(row)]
+    st.session_state.history = [format_row(row)]
 
 
 if (
@@ -77,7 +77,7 @@ def scroll_art():
     if running:
         nxt = next_generation(st.session_state.current)
         st.session_state.current = nxt
-        st.session_state.history.append("".join(nxt))
+        st.session_state.history.append(format_row(nxt))
         overflow = len(st.session_state.history) - visible_rows
         if overflow > 0:
             st.session_state.history = st.session_state.history[overflow:]
@@ -86,7 +86,8 @@ def scroll_art():
     st.code(frame, language=None)
     st.caption(
         f"generation {len(st.session_state.history)} · "
-        f"{width} cells · {'scrolling' if running else 'paused'}"
+        f"{width} cells · {'scrolling' if running else 'paused'} · "
+        "look for random “scrollart!” labels"
     )
 
 
