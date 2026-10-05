@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """Infinite scrolling Sierpiński triangle via Rule 90 cellular automaton."""
 
+import random
 import shutil
 import sys
 import time
 
 ALIVE = "█"
 DEAD = " "
+SCROLLART = "scrollart!"
+# Chance each displayed row overlays the label (keeps CA state untouched).
+INSERT_CHANCE = 0.08
 
 
 def get_width():
@@ -39,6 +43,20 @@ def next_generation(row):
     return next_row
 
 
+def format_row(row, insert_chance=INSERT_CHANCE, rng=None):
+    """Return a display string for `row`, sometimes overlaying 'scrollart!'."""
+    text = "".join(row)
+    label = SCROLLART
+    if len(text) < len(label):
+        return text
+    choose = rng.random if rng is not None else random.random
+    if choose() >= insert_chance:
+        return text
+    pick = rng.randint if rng is not None else random.randint
+    pos = pick(0, len(text) - len(label))
+    return text[:pos] + label + text[pos + len(label) :]
+
+
 def generate_rows(width, count, start_row=None):
     """Yield `count` generations starting from `start_row` (or a centered seed)."""
     row = list(start_row) if start_row is not None else initial_row(width)
@@ -54,7 +72,7 @@ def main():
 
     try:
         while True:
-            print("".join(row))
+            print(format_row(row))
             sys.stdout.flush()
             row = next_generation(row)
             time.sleep(0.05)

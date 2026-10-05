@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 #include <signal.h>
 
@@ -15,6 +16,8 @@
 #define DEFAULT_WIDTH 79
 #define MAX_WIDTH 512
 #define DELAY_US 50000
+#define SCROLLART "scrollart!"
+#define INSERT_CHANCE_PERCENT 8
 
 static volatile sig_atomic_t running = 1;
 
@@ -57,19 +60,41 @@ static void next_generation(const char *row, char *next, int width)
     next[width] = '\0';
 }
 
+/* Copy CA row into out, sometimes overlaying "scrollart!" for display only. */
+static void format_row(const char *row, char *out, int width)
+{
+    static const char label[] = SCROLLART;
+    const int label_len = (int)(sizeof(label) - 1);
+
+    memcpy(out, row, (size_t)width + 1);
+    if (width < label_len) {
+        return;
+    }
+    if ((rand() % 100) >= INSERT_CHANCE_PERCENT) {
+        return;
+    }
+    {
+        int pos = rand() % (width - label_len + 1);
+        memcpy(out + pos, label, (size_t)label_len);
+    }
+}
+
 int main(void)
 {
     int width = get_width();
     char row[MAX_WIDTH + 1];
     char next[MAX_WIDTH + 1];
+    char display[MAX_WIDTH + 1];
     char *cur = row;
     char *nxt = next;
 
+    srand((unsigned)time(NULL));
     signal(SIGINT, on_interrupt);
     initial_row(cur, width);
 
     while (running) {
-        puts(cur);
+        format_row(cur, display, width);
+        puts(display);
         fflush(stdout);
         next_generation(cur, nxt, width);
         {
