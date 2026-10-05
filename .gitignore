@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Built scroll binaries
+rule90_scroll_c
+rule90_scroll_bas
+rule90_scroll
