@@ -2,13 +2,29 @@
 
 Cellular automata scrollart!
 
-## Terminal
+Rule 90 scrolling Sierpiński triangle — available in Python, BASIC, C, and Streamlit.
+
+## Python (terminal)
 
 ```bash
-python rule90_scroll.py
+python3 rule90_scroll.py
 ```
 
 Press `Ctrl+C` to stop.
+
+## BASIC (FreeBASIC)
+
+```bash
+fbc rule90_scroll.bas -x rule90_scroll_bas
+./rule90_scroll_bas
+```
+
+## C
+
+```bash
+gcc -O2 -o rule90_scroll_c rule90_scroll.c
+./rule90_scroll_c
+```
 
 ## Streamlit
 
