@@ -17,6 +17,13 @@ def get_width():
         return 79
 
 
+def initial_row(width):
+    """Return the first generation: one alive cell centered in a dead row."""
+    row = [DEAD] * width
+    row[width // 2] = ALIVE
+    return row
+
+
 def next_generation(row):
     """Compute the next Rule 90 generation with toroidal (wrap-around) edges.
 
@@ -32,13 +39,18 @@ def next_generation(row):
     return next_row
 
 
+def generate_rows(width, count, start_row=None):
+    """Yield `count` generations starting from `start_row` (or a centered seed)."""
+    row = list(start_row) if start_row is not None else initial_row(width)
+    for _ in range(count):
+        yield row
+        row = next_generation(row)
+
+
 def main():
     """Run the scrolling Rule 90 animation until interrupted."""
     width = get_width()
-
-    # First generation: all dead except one alive cell in the exact center
-    row = [DEAD] * width
-    row[width // 2] = ALIVE
+    row = initial_row(width)
 
     try:
         while True:
