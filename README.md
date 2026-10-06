@@ -36,3 +36,5 @@ streamlit run app.py
 Open the local URL Streamlit prints (usually http://localhost:8501). Use the sidebar to change width, visible rows, scroll speed, pause, reset, or enable **16-bit sound**.
 
 Sound is a square/pulse blip driven by the foremost CA row (pitch from the alive-cell center, pulse width from density). Rows that display the random `scrollart!` overlay stay silent.
+
+**iPhone / iPad:** Safari blocks audio until you tap **Tap to enable sound** inside the viewer. That unlock has to happen in the same view that plays the blips (a sidebar toggle alone is not enough on iOS).
